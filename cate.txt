@@ -1,0 +1,125 @@
+private void Recomment_Button_Click(object sender, EventArgs e)
+        {
+            var kor="";
+            var cn = "";
+            var jp = "";
+            var wt = "";
+            var etc = "";
+            if (Korean.Checked == true)
+            {
+                kor = "선호";
+            }
+            else if(no_kor.Checked == true)
+            {
+                kor = "불호";
+            }
+            else
+            {
+                kor = "일반";
+            }
+            if (Chinese.Checked == true)
+            {
+                cn = "선호";
+            }
+            else if (no_cn.Checked == true)
+            {
+                cn = "불호";
+            }
+            else
+            {
+                cn = "일반";
+            }
+            if (Japanese.Checked == true)
+            {
+                jp = "선호";
+            }
+            else if (no_jp.Checked == true)
+            {
+                jp = "불호";
+            }
+            else
+            {
+                jp = "일반";
+            }
+            if (Western.Checked == true)
+            {
+                wt = "선호";
+            }
+            else if (no_west.Checked == true)
+            {
+                wt = "불호";
+            }
+            else
+            {
+                wt = "일반";
+            }
+            if (Etc.Checked == true)
+            {
+                etc = "선호";
+            }
+            else if (no_etc.Checked == true)
+            {
+                etc = "불호";
+            }
+            else
+            {
+                etc = "일반";
+            }
+
+            RestaurantInform.DataSource = logic.RecommendRest(kor, cn, jp, wt, etc,getNotIn(),blackRest()).Tables[0];
+            RestaurantInform.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.Recomment_Button.Enabled = false;
+        }
+        public string blackRest()
+        {
+            if (Nope_RestList.CheckedItems.Count == 0)
+            {
+                return "";
+            }
+            else
+            {
+                var black = "And r.name not in(";
+                foreach(var item in Nope_RestList.CheckedItems)
+                {
+                    var row = (item as DataRowView).Row;
+                    black += "'"+row["name"].ToString()+"'";
+                    if (Nope_RestList.CheckedItems.IndexOf(item) != Nope_RestList.CheckedItems.Count - 1)
+                    {
+                        black += ",";
+                    }
+                }
+                black.Remove(black.Length - 1);
+                return black + ")";
+            }
+        }
+        public String getNotIn()
+        {
+            if (notInRes.Count == 0 )
+            {
+                return "";
+            }
+            else
+            {
+                var notInRecommend = "AND r.RESID NOT IN(";
+                for (int i = 0; i < notInRes.Count; i++)
+                {
+                    notInRecommend += notInRes[i];
+                    if (i != notInRes.Count - 1)
+                    {
+                        notInRecommend += ",";
+                    }
+                }
+                notInRecommend.Remove(notInRecommend.Length - 1);
+                return notInRecommend + ")";
+            }
+        }
+        private List<String> notInRes = new List<String>();
+        private void Re_Recommend_Button_Click(object sender, EventArgs e)
+        {
+            if (RestaurantInform.RowCount > 0)
+            {
+                var beforeSeq = RestaurantInform.Rows[0].Cells[0].Value.ToString();
+                notInRes.Add(beforeSeq);
+            }
+            Recomment_Button_Click(sender, e);
+        }
