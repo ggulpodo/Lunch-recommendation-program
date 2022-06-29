@@ -1,0 +1,88 @@
+CREATE TABLE userList (
+   userId   NVARCHAR2(30)      NOT NULL
+);
+
+CREATE TABLE RL (
+   seqR   NUMBER      NOT NULL,
+   nameR   NVARCHAR2(200)      NULL,
+   category   NVARCHAR2(30)      NULL,
+   count   NUMBER      NULL,
+   signature   NVARCHAR2(50)      NULL
+);
+
+CREATE TABLE EditR (
+   seqE   NUMBER      NOT NULL,
+   Edate   NVARCHAR2(30)      NULL,
+   Econtent   NVARCHAR2(200)      NULL,
+   userId   NVARCHAR2(30)      NOT NULL,
+   seqR   NUMBER      NOT NULL
+);
+
+CREATE TABLE selectedR (
+   seqSR   NUMBER      NOT NULL,
+   userId   NVARCHAR2(30)      NOT NULL,
+   seqR   NUMBER      NOT NULL,
+   selectedDate   NVARCHAR2(30)      NOT NULL
+);
+
+CREATE TABLE loginout (
+   userId   NVARCHAR2(30)      NOT NULL,
+   lastLogin   NVARCHAR2(30)      NULL,
+   lastLogout   NVARCHAR2(30)      NULL,
+   status   NUMBER      NOT NULL
+);
+
+ALTER TABLE userList ADD CONSTRAINT PK_USERLIST PRIMARY KEY (
+   userId
+);
+
+ALTER TABLE RL ADD CONSTRAINT PK_RL PRIMARY KEY (
+   seqR
+);
+
+ALTER TABLE EditR ADD CONSTRAINT PK_EDITR PRIMARY KEY (
+   seqE
+);
+
+ALTER TABLE selectedR ADD CONSTRAINT PK_SELECTEDR PRIMARY KEY (
+   seqSR
+);
+
+ALTER TABLE loginout ADD CONSTRAINT PK_LOGINOUT PRIMARY KEY (
+   userId
+);
+
+ALTER TABLE EditR ADD CONSTRAINT FK_uList_TO_ER_ FOREIGN KEY (
+   userId
+)
+REFERENCES userList (
+   userId
+);
+
+ALTER TABLE EditR ADD CONSTRAINT FK_RL_TO_EditR_1 FOREIGN KEY (
+   seqR
+)
+REFERENCES RL (
+   seqR
+);
+
+ALTER TABLE selectedR ADD CONSTRAINT FK_uList_TO_sR FOREIGN KEY (
+   userId
+)
+REFERENCES userList (
+   userId
+);
+
+ALTER TABLE selectedR ADD CONSTRAINT FK_RL_TO_sR FOREIGN KEY (
+   seqR
+)
+REFERENCES RL (
+   seqR
+);
+
+ALTER TABLE loginout ADD CONSTRAINT FK_uList_TO_loginout FOREIGN KEY (
+   userId
+)
+REFERENCES userList (
+   userId
+);
